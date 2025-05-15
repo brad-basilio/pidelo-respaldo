@@ -8,10 +8,22 @@ import { Loading } from "../Components/Resources/Loading";
 import { NoResults } from "../Components/Resources/NoResult";
 import SelectForm from "./Components/SelectForm";
 import { GET } from "sode-extend-react";
+import Global from "../../../Utils/Global";
+import CardProductPideloPe from "../Products/Components/CardProductPideloPe";
 
 const itemsRest = new ItemsRest();
 
+
+
+
 const SkeletonCard = () => {
+    const [stylePidelo, setStylePidelo] = useState(false);
+    useEffect(() => {
+        const app_style = Global.APP_STYLE;
+        if (app_style === 'pidelope') {
+            setStylePidelo(true);
+        }
+    }, []);
     return (
         <div
             className={`group  animate-pulse  transition-transform duration-300 hover:scale-105 w-1/2 lg:w-1/4 flex-shrink-0 font-font-general customtext-primary cursor-pointer`}
@@ -40,8 +52,16 @@ const SkeletonCard = () => {
 
 //const CatalagoFiltros = ({ items, data, categories, brands, prices, cart, setCart }) => {
 const CatalagoFiltros = ({ items, data, filteredData, cart, setCart }) => {
+    const [stylePidelo, setStylePidelo] = useState(false);
+    useEffect(() => {
+        const app_style = Global.APP_STYLE;
+        if (app_style === 'pidelope') {
+            setStylePidelo(true);
+        }
+    }, []);
     //const { categories, brands, priceRanges } = filteredData;
     const [brands, setBrands] = useState([]);
+    const [shops,setShops] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
     const [categories, setCategories] = useState([]);
     const [priceRanges, setPriceRanges] = useState([]);
@@ -55,6 +75,7 @@ const CatalagoFiltros = ({ items, data, filteredData, cart, setCart }) => {
     });
 
     const [selectedFilters, setSelectedFilters] = useState({
+        shop_id: GET.shop? GET.shop.split(',') : [],
         collection_id: GET.collection ? GET.collection.split(',') : [],
         category_id: GET.category ? GET.category.split(',') : [],
         brand_id: GET.brand ? GET.brand.split(',') : [],
@@ -63,7 +84,7 @@ const CatalagoFiltros = ({ items, data, filteredData, cart, setCart }) => {
         name: GET.search || null,
         sort_by: "created_at",
         order: "desc",
-      });
+    });
     //filtros nuevos
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -78,7 +99,14 @@ const CatalagoFiltros = ({ items, data, filteredData, cart, setCart }) => {
 
     const transformFilters = (filters) => {
         const transformedFilters = [];
-
+        if (filters.shop_id.length > 0) {
+            const shopConditions = filters.shop_id.map((id) => [
+                "shop.slug",
+                "=",
+                id,
+            ]);
+            transformedFilters.push(["or", ...shopConditions]);
+        }
         if (filters.collection_id.length > 0) {
             const collectionConditions = filters.collection_id.map((id) => [
                 "collection.slug",
@@ -163,7 +191,8 @@ const CatalagoFiltros = ({ items, data, filteredData, cart, setCart }) => {
                     response.totalCount
                 ),
             });
-           // console.log(response);
+            // console.log(response);
+            setShops(response?.summary.shops);
             setBrands(response?.summary.brands);
             setCategories(response?.summary.categories);
             setSubcategories(response?.summary.subcategories);
@@ -177,11 +206,11 @@ const CatalagoFiltros = ({ items, data, filteredData, cart, setCart }) => {
 
 
 
-   
+
 
 
     useEffect(() => {
-        
+
         fetchProducts(pagination.currentPage);
     }, [selectedFilters]);
     const handlePageChange = (page) => {
@@ -277,7 +306,7 @@ const CatalagoFiltros = ({ items, data, filteredData, cart, setCart }) => {
     const filteredBrands = brands.filter((brand) =>
         brand.name.toLowerCase().includes(searchBrand.toLowerCase())
     );
- 
+
     const [filtersOpen, setFiltersOpen] = useState(false);
 
     return (
@@ -649,22 +678,28 @@ const CatalagoFiltros = ({ items, data, filteredData, cart, setCart }) => {
                                 )}
                             </div>
                         ) : (
-                            <div className="flex items-center flex-wrap gap-y-8 transition-all duration-300 ease-in-out">
+                            <div className={`${stylePidelo ?"grid grid-cols-4 gap-4" : "flex items-center flex-wrap gap-y-8"} transition-all duration-300 ease-in-out `}>
                                 {Array.isArray(products) &&
                                     products.length > 0 ? (
                                     products.map((product) => (
                                         <div
-                                            className="   w-1/2 lg:w-1/3 xl:w-1/4 lg:h-[460px] lg:max-h-[460px]  xl:h-[400px] xl:max-h-[400px] 2xl:h-[430px] 2xl:max-h-[430px] flex items-center justify-center"
+                                            className={`   ${stylePidelo? "" : " w-1/2 lg:w-1/3 xl:w-1/4  flex items-center justify-center lg:h-[460px] lg:max-h-[460px]  xl:h-[400px] xl:max-h-[400px] 2xl:h-[430px] 2xl:max-h-[430px]"}	`}
                                             // className="   w-1/2 lg:w-1/3 xl:w-1/4"
                                             key={product.id}
                                         >
-                                            <CardHoverBtn
-                                                data={data}
+                                            {stylePidelo ? <CardProductPideloPe data={data}
                                                 product={product}
-                                                widthClass="w-full sm:w-full lg:w-full"
-                                                cart={cart}
-                                                setCart={setCart}
-                                            />
+                                                widthClass="w-full"
+                                            /> :
+                                                <CardHoverBtn
+                                                    data={data}
+                                                    product={product}
+                                                    widthClass="w-full sm:w-full lg:w-full"
+                                                    cart={cart}
+                                                    setCart={setCart}
+                                                />
+                                            }
+
                                         </div>
                                     ))
                                 ) : (

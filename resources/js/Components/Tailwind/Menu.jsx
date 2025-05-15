@@ -3,6 +3,7 @@ import React from "react"
 
 
 const MenuSimple = React.lazy(() => import('./Menu/MenuSimple'))
+const MenuPideloPe = React.lazy(() => import('./Menu/MenuPideloPe'))
 const MenuBananaLab = React.lazy(() => import('./Menu/MenuBananaLab'))
 const Menu = ({ data, which, items, generals = [], cart, setCart, pages }) => {
   const getMenu = () => {
@@ -10,6 +11,8 @@ const Menu = ({ data, which, items, generals = [], cart, setCart, pages }) => {
 
       case 'MenuSimple':
         return <MenuSimple data={data} items={items} cart={cart} setCart={setCart} pages={pages} />
+        case 'MenuPideloPe':
+          return <MenuPideloPe data={data} items={items} cart={cart} setCart={setCart} pages={pages} />
         case 'MenuBananaLab':
           return <MenuBananaLab data={data} items={items} cart={cart} setCart={setCart} pages={pages} />
       default:

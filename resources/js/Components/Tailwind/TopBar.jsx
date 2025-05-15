@@ -3,6 +3,7 @@ import React from "react";
 const TopBarSimple = React.lazy(() => import("./TopBars/TopBarSimple"));
 const TopBarSocials = React.lazy(() => import("./TopBars/TopBarSocials"));
 const TopBarCart = React.lazy(() => import("./TopBars/TopBarCart"));
+const TopBarPideloPe = React.lazy(() => import("./TopBars/TopBarPideloPe"));
 const TopBarCopyright = React.lazy(() => import("./TopBars/TopBarCopyright"));
 const TopBarCopyrightSocials = React.lazy(() =>
     import("./TopBars/TopBarCopyrightSocials")
@@ -25,6 +26,16 @@ const TopBar = ({ data, which, items, setCart, cart, isUser }) => {
                         isUser={isUser}
                     />
                 );
+                case "TopBarPideloPe":
+                    return (
+                        <TopBarPideloPe
+                            data={data}
+                            items={items}
+                            cart={cart}
+                            setCart={setCart}
+                            isUser={isUser}
+                        />
+                    );
             case "TopBarCopyright":
                 return (
                     <TopBarCopyright

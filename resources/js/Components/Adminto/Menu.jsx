@@ -105,6 +105,7 @@ const Menu = ({ session, hasRole }) => {
                                 </MenuItem>*/}
 
                   <MenuItemContainer title="Características" icon="mdi mdi-view-dashboard">
+                  <MenuItem href="/admin/shops" icon="mdi mdi-store-outline">Tiendas</MenuItem>
                     <MenuItem href="/admin/collections" icon="mdi mdi-view-carousel-outline">Colecciones</MenuItem>
                     <MenuItem href="/admin/categories" icon="mdi mdi-shape-outline">Categorías</MenuItem>
                     <MenuItem href="/admin/subcategories" icon="mdi mdi-file-tree">SubCategorías</MenuItem>

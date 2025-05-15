@@ -10,6 +10,9 @@ const ProductNavigation = React.lazy(() =>
 const ProductBananaLab = React.lazy(() =>
     import("./Products/ProductBananaLab")
 );
+const ProductPideloPe = React.lazy(() =>
+    import("./Products/ProductPideloPe")
+);
 const ScrapingSimple = React.lazy(() => import("./Scraping/ScrapingSimple"));
 
 const Product = ({
@@ -77,6 +80,15 @@ const Product = ({
                         setCart={setCart}
                     />
                 );
+                case "ProductPideloPe":
+                    return (
+                        <ProductPideloPe
+                            data={data}
+                            items={items}
+                            cart={cart}
+                            setCart={setCart}
+                        />
+                    );
             case "Scraping":
                 return (
                     <ScrapingSimple

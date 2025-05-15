@@ -8,6 +8,7 @@ use App\Models\Collection;
 use App\Models\Combo;
 use App\Models\Item;
 use App\Models\ItemTag;
+use App\Models\Shop;
 use App\Models\SubCategory;
 use App\Models\Tag;
 use App\Models\WebDetail;
@@ -35,7 +36,7 @@ class ItemController extends BasicController
 
         try {
             // Obtener el producto principal por slug
-            $product = Item::with(['category', 'brand', 'images', 'specifications'])
+            $product = Item::with(['category', 'brand', 'images', 'shop', 'specifications'])
                 ->where('slug', $request->slug)
                 ->firstOrFail();
 
@@ -84,7 +85,8 @@ class ItemController extends BasicController
         //  dump($request->all());
         // dump('Estamos aqui');
         $query = $model::select(['items.*'])
-            ->with(['collection', 'category', 'subcategory', 'brand', 'tags'])
+            ->with(['collection', 'category', 'subcategory', 'shop', 'brand', 'tags'])
+            ->leftJoin('shops AS shop', 'shop.id', 'items.shop_id')
             ->leftJoin('collections AS collection', 'collection.id', 'items.collection_id')
             ->leftJoin('categories AS category', 'category.id', 'items.category_id')
             ->leftJoin('sub_categories AS subcategory', 'subcategory.id', 'items.subcategory_id')
@@ -92,6 +94,10 @@ class ItemController extends BasicController
             ->leftJoin('item_tags AS item_tag', 'item_tag.item_id', 'items.id')
             ->where('items.status', true)
             ->where('items.visible', true)
+            ->where(function ($query) {
+                $query->where('shop.status', true)
+                    ->orWhereNull('shop.id');
+            })
             ->where(function ($query) {
                 $query->where('collection.status', true)
                     ->orWhereNull('collection.id');
@@ -169,12 +175,14 @@ class ItemController extends BasicController
                     ];
                 }
             }
+            $i4shop = clone $builder;
 
             $i4collection = clone $builder;
             $i4category = clone $builder;
             $i4subcategory = clone $builder;
             $i4brand = clone $builder;
             $i4tag = clone $builder;
+            $shops = Item::getForeign($i4shop, Shop::class, 'shop_id');
             $collections = Item::getForeign($i4collection, Collection::class, 'collection_id');
             $categories = Item::getForeign($i4category, Category::class, 'category_id');
             $subcategories = Item::getForeign($i4subcategory, SubCategory::class, 'subcategory_id');
@@ -186,10 +194,11 @@ class ItemController extends BasicController
                 'categories' => $categories,
                 'subcategories' => $subcategories,
                 'brands' => $brands,
-                'tags' => $tags
+                'tags' => $tags,
+                'shops' => $shops
             ];
         } catch (\Throwable $th) {
-           // dump($th->getMessage());
+            // dump($th->getMessage());
             return [];
         }
     }

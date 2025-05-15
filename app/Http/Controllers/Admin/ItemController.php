@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Collection;
 use App\Models\Item;
 use App\Models\ItemTag;
+use App\Models\Shop;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -159,11 +160,13 @@ class ItemController extends BasicController
         $categories = Category::all();
         $brands = Brand::all();
         $collections = Collection::all();
+        $shops = Shop::all();
 
         return [
             'categories' => $categories,
             'brands' => $brands,
-            'collections' => $collections
+            'collections' => $collections,
+            'shops' => $shops
         ];
     }
 

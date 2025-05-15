@@ -30,6 +30,16 @@
                 "data": ["link_cart"]
             },
             {
+                "id": "TopBarPideloPe",
+                "name": "Con Login",
+                "image": "top-bar-socials.png",
+                "using": {
+                    "model": "Social"
+                },
+                "generals": ["cintillo"],
+                "data": ["link_cart"]
+            },
+            {
                 "id": "TopBarCopyright",
                 "name": "Copyright",
                 "image": "top-bar-copyright.png",
@@ -45,6 +55,15 @@
             {
                 "id": "MenuSimple",
                 "name": "Menu - Stech",
+                "image": "top-bar-simple.png",
+                "using": {
+                    "model": "Category",
+                    "with": ["subcategories"]
+                }
+            },
+            {
+                "id": "MenuPideloPe",
+                "name": "MenuPideloPe",
                 "image": "top-bar-simple.png",
                 "using": {
                     "model": "Category",
@@ -81,6 +100,17 @@
                 "using": {
                     "model": "Category",
                     "with": ["subcategories"]
+                },
+                "generals": ["phone_whatsapp", "message_whatsapp"]
+            },
+            {
+                "id": "HeaderSearchPideloPe",
+                "name": "HeaderSearchPideloPe",
+                "image": "header-with-search.png",
+                "data": ["class", "link_cart"],
+                "using": {
+                    "model": "Shop"
+                    
                 },
                 "generals": ["phone_whatsapp", "message_whatsapp"]
             },
@@ -140,6 +170,13 @@
             {
                 "id": "CarruselBenefitsInifinite",
                 "name": "Beneficios",
+                "using": {
+                    "model": "Indicator"
+                }
+            },
+            {
+                "id": "CarruselBenefitsPideloPe",
+                "name": "CarruselBenefitsPideloPe",
                 "using": {
                     "model": "Indicator"
                 }
@@ -483,6 +520,17 @@
                 }
             },
             {
+                "id": "CategoryPidelo",
+                "name": "CategoryPidelo",
+                "image": "categories-pretty-grid.png",
+                "data": ["title"],
+                "using": {
+                    "model": "Category",
+                  
+                    "filters": ["featured"]
+                }
+            },
+            {
                 "id": "CategoryOneLine",
                 "name": "Una Linea",
                 "image": "categories-one-line.png",
@@ -707,6 +755,30 @@
                 }
             },
             {
+                "id": "ProductPideloPe",
+                "name": "ProductPideloPe",
+                "image": "products-list.png",
+                "data": [
+                    "title",
+                    "path",
+                    "description",
+                    "link_catalog",
+                    "link_cart"
+                ],
+                "using": {
+                    "model": "Item",
+                    "filters": [
+                        "featured",
+                        "recommended",
+                        "offering",
+                        "is_new",
+                        "views"
+                    ],
+                    "with": ["category", "subcategory", "brand"],
+                    "limit": 8
+                }
+            },
+            {
                 "id": "ProductBananaLab",
                 "name": "ProductBananaLab",
                 "image": "products-list.png",
@@ -756,6 +828,10 @@
             {
                 "id": "BannerSimple",
                 "name": "Simple"
+            },
+            {
+                "id": "BannerCategoryScraping",
+                "name": "BannerCategoryScraping"
             },
             {
                 "id": "BannerAd",

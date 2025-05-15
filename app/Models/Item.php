@@ -40,7 +40,9 @@ class Item extends Model
         'sku',
         'stock',
         'color',
-        'texture'
+        'texture',
+        'weight',
+        'shop_id'
 
     ];
 
@@ -122,6 +124,11 @@ class Item extends Model
     public function features()
     {
         return $this->hasMany(ItemFeature::class);
+    }
+
+    public function shop()
+    {
+        return $this->hasOne(Shop::class, 'id', 'shop_id');
     }
 
     protected static function booted()

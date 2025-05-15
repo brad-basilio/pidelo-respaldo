@@ -1,6 +1,7 @@
 import React, { lazy } from "react";
 
 const BannerSimple = lazy(() => import("./Banners/BannerSimple"));
+const BannerCategoryScraping = lazy(() => import("./Scraping/Components/BannerCategoryScraping"));
 const BannerAd = lazy(() => import("./Banners/BannerAd"));
 const BannerFullWidth = lazy(() => import("./Banners/BannerFullWidth"));
 const BannerFlex = lazy(() => import("./Banners/BannerFlex"));
@@ -27,6 +28,8 @@ const Banner = ({ which, data }) => {
                 return <BannerSimpleSF data={data} />;
             case "BannerBananaLab":
                 return <BannerBananaLab data={data} />;
+                case "BannerCategoryScraping":
+                    return <BannerCategoryScraping data={data} />;
 
             default:
                 return (

@@ -24,7 +24,7 @@ import ModalImportItem from "./Components/ModalImportItem";
 
 const itemsRest = new ItemsRest();
 
-const Items = ({ categories, brands, collections }) => {
+const Items = ({ categories, brands, collections, shops }) => {
     //!FALTA EDIT AND DELETEDE GALERIA
 
     const [itemData, setItemData] = useState([]);
@@ -36,6 +36,7 @@ const Items = ({ categories, brands, collections }) => {
 
     const idRef = useRef();
     const categoryRef = useRef();
+    const shopRef = useRef();
     const collectionRef = useRef();
     const subcategoryRef = useRef();
     const brandRef = useRef();
@@ -43,6 +44,7 @@ const Items = ({ categories, brands, collections }) => {
     const colorRef = useRef();
     const summaryRef = useRef();
     const priceRef = useRef();
+    const weightRef = useRef();
     const discountRef = useRef();
     const tagsRef = useRef();
     const bannerRef = useRef();
@@ -59,6 +61,7 @@ const Items = ({ categories, brands, collections }) => {
 
     const [isEditing, setIsEditing] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedShop, setSelectedShop] = useState(null);
     const [selectedCollection, setSelectedCollection] = useState(null);
     /*ADD NEW LINES GALLERY */
 
@@ -126,6 +129,9 @@ const Items = ({ categories, brands, collections }) => {
         $(categoryRef.current)
             .val(data?.category_id || null)
             .trigger("change");
+        $(shopRef.current)
+           .val(data?.shop_id || null)
+           .trigger("change");
         $(collectionRef.current)
             .val(data?.collection_id || null)
             .trigger("change");
@@ -141,21 +147,19 @@ const Items = ({ categories, brands, collections }) => {
         colorRef.current.value = data?.color || "";
         summaryRef.current.value = data?.summary || "";
         priceRef.current.value = data?.price || 0;
+        weightRef.current.value = data?.weight || 0;
         discountRef.current.value = data?.discount || 0;
 
         SetSelectValue(tagsRef.current, data?.tags ?? [], "id", "name");
 
         bannerRef.current.value = null;
         imageRef.current.value = null;
-        bannerRef.image.src = `/storage/images/item/${
-            data?.banner ?? "undefined"
-        }`;
-        imageRef.image.src = `/storage/images/item/${
-            data?.image ?? "undefined"
-        }`;
-        textureRef.image.src = `/storage/images/item/${
-            data?.texture ?? "undefined"
-        }`;
+        bannerRef.image.src = `/storage/images/item/${data?.banner ?? "undefined"
+            }`;
+        imageRef.image.src = `/storage/images/item/${data?.image ?? "undefined"
+            }`;
+        textureRef.image.src = `/storage/images/item/${data?.texture ?? "undefined"
+            }`;
 
         descriptionRef.editor.root.innerHTML = data?.description ?? "";
 
@@ -185,6 +189,7 @@ const Items = ({ categories, brands, collections }) => {
         const request = {
             id: idRef.current.value || undefined,
             category_id: categoryRef.current.value,
+            shop_id: shopRef.current.value,
             collection_id: collectionRef.current.value || null,
             subcategory_id: subcategoryRef.current.value,
             brand_id: brandRef.current.value,
@@ -192,6 +197,7 @@ const Items = ({ categories, brands, collections }) => {
             color: colorRef.current.value,
             summary: summaryRef.current.value,
             price: priceRef.current.value,
+            weight: weightRef.current.value,
             discount: discountRef.current.value,
             tags: $(tagsRef.current).val(),
             description: descriptionRef.current.value,
@@ -433,8 +439,8 @@ const Items = ({ categories, brands, collections }) => {
                                         borderRadius: "4px",
                                     }}
                                     onError={(e) =>
-                                        (e.target.src =
-                                            "/api/cover/thumbnail/null")
+                                    (e.target.src =
+                                        "/api/cover/thumbnail/null")
                                     }
                                 />
                             );
@@ -580,6 +586,22 @@ const Items = ({ categories, brands, collections }) => {
                 <div className="row" id="principal-container">
                     <input ref={idRef} type="hidden" />
                     <div className="col-md-3">
+                    <SelectFormGroup
+                            eRef={shopRef}
+                            label="Tienda"
+                            required
+                            dropdownParent="#principal-container"
+                            onChange={(e) =>
+                                setSelectedShop(e.target.value)
+                            }
+                        >
+                            {shops.map((item, index) => (
+                                <option key={index} value={item.id}>
+                                    {item.name}
+                                </option>
+                            ))}
+                        </SelectFormGroup>
+
                         <SelectFormGroup
                             eRef={categoryRef}
                             label="Categoría"
@@ -636,7 +658,13 @@ const Items = ({ categories, brands, collections }) => {
                             eRef={stockRef}
                             type="number"
                         />
-
+                        <InputFormGroup
+                            eRef={weightRef}
+                            label="Peso"
+                            type="number"
+                            step="0.01"
+                            required
+                        />
                         <InputFormGroup
                             eRef={priceRef}
                             label="Precio"

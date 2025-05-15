@@ -11,6 +11,7 @@ class Global {
     static APP_COLOR_PRIMARY = null;
     static CULQI_PUBLIC_KEY = null;
     static CULQI_API = null;
+    static APP_STYLE = null;
 
     static set = (name, value) => {
         Global[name] = value;
