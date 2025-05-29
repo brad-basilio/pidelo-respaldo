@@ -42,6 +42,8 @@ class Item extends Model
         'color',
         'texture',
         'weight',
+        'size',
+        'group_code',
         'shop_id'
 
     ];

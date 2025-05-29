@@ -7,7 +7,6 @@ use App\Models\Category;
 use App\Models\SubCategory;
 use App\Models\Collection;
 use App\Models\Brand;
-use App\Models\Shop;
 use App\Models\ItemSpecification;
 use App\Models\ItemImage;
 use Exception;
@@ -18,10 +17,9 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Validators\Failure;
 use Illuminate\Support\Str;
-use SoDe\Extend\Crypto;
 use Throwable;
 
-class ItemImport implements ToModel, WithHeadingRow, SkipsOnError, SkipsOnFailure
+class ItemImportStech implements ToModel, WithHeadingRow, SkipsOnError, SkipsOnFailure
 {
     use \Maatwebsite\Excel\Concerns\Importable;
     private $errors = [];
@@ -34,109 +32,84 @@ class ItemImport implements ToModel, WithHeadingRow, SkipsOnError, SkipsOnFailur
         \DB::statement('SET FOREIGN_KEY_CHECKS=1;'); // ✅ Reactiva las claves foráneas
     }
 
+
     public function model(array $row)
     {
+        //dump($row); // 🔍 Ver qué datos se están importando
         try {
+            // 🔍 1️⃣ Si la fila está vacía, detener la importación
             if ($this->isRowEmpty($row)) {
-                return null;
+                return null; // 🚫 Ignorar la fila y no procesarla
             }
 
-            $this->validateRequiredFields($row);
-
+            // 1️⃣ Obtener o crear la categoría
             $category = Category::firstOrCreate(
                 ['name' => $row['categoria']],
                 ['slug' => str()->slug($row['categoria'])]
             );
 
-            $subCategory = SubCategory::firstOrCreate(
+          /*  $collection = Collection::firstOrCreate(
+                ['name' => $row['collection']],
+                ['slug' => str()->slug($row['collection'])]
+            );*/
+
+          // 2️⃣ Obtener o crear la subcategoría
+             $subCategory = SubCategory::firstOrCreate(
                 ['name' => $row['subcategoria'], 'category_id' => $category->id],
-                ['slug' => str()->slug($row['subcategoria'])]
-            );
-            $brand = null;
-            if (!empty($row['marca'])) {
-                $brand = Brand::firstOrCreate(
-                    ['name' => $row['marca']],
-                    ['slug' => str()->slug($row['marca'])]
-                );
+               ['slug' => str()->slug($row['subcategoria'])]
+          );
+
+       //    3️⃣ Obtener o crear la marca
+           $brand = Brand::firstOrCreate(
+             ['name' => $row['marca']],
+             ['slug' => str()->slug($row['marca'])]
+          );
+            $slug = "";
+            if ($row['nombre_de_producto']) {
+                $slug = Str::slug($row['nombre_de_producto']);
+                $slugExists = Item::where('slug', $slug)->exists();
+                if ($slugExists) {
+                  $slug = $slug . '-' . Crypto::short();
+                }
             }
 
-            $shop = null;
-            if (!empty($row['tienda'])) {
-                $shop = Shop::firstOrCreate(
-                    ['name' => $row['tienda']],
-                    ['slug' => str()->slug($row['tienda'])]
-                );
-            }
-
-            // Variaciones
-            $color = $row['color'] ?? null;
-            $size = $row['talla'] ?? null;
-            $groupCode = $row['grupo'] ?? Str::slug($row['nombre_de_producto']);
-
-            $slug = Str::slug($row['nombre_de_producto']);
-            if ($color) {
-                $slug .= '__' . Str::slug($color);
-            }
-            if ($size) {
-                $slug .= '-' . strtolower($size);
-            }
-
-            if (Item::where('slug', $slug)->exists()) {
-                $slug .= '-' . \SoDe\Extend\Crypto::short();
-            }
-
+            // 4️⃣ Crear el producto
             $item = Item::create([
                 'sku' => $row['sku'],
                 'name' => $row['nombre_de_producto'],
-                'description' => $row['descripcion'] ?? null,
+                //'summary' => $row['resumen'],
+                'description' => $row['descripcion'],
                 'price' => $row['precio'],
-                'discount' => $row['descuento'] ?? null,
+                'discount' => $row['descuento'],
+                //final price = price > discount ? discount : discount ===NULL?price:discount;
                 'final_price' => isset($row['descuento']) && $row['descuento'] > 0 ? $row['descuento'] : $row['precio'],
-                'discount_percent' => isset($row['descuento']) && $row['descuento'] > 0
-                    ? round((100 - ($row['descuento'] / $row['precio']) * 100))
-                    : null,
+                'discount_percent' => isset($row['descuento']) && $row['descuento'] > 0 ? round((100 - ($row['descuento'] / $row['precio']) * 100)) : NULL,
                 'category_id' => $category->id,
                 'subcategory_id' => $subCategory->id,
-                'brand_id' => $brand->id ?? null,
+               // 'collection_id' => $collection->id ?? NULL,
+                'brand_id' => $brand->id,
                 'image' => $this->getMainImage($row['sku']),
-                'slug' => $slug,
-                'stock' => isset($row['stock']) && $row['stock'] > 0 ? $row['stock'] : 10,
-                'weight' => isset($row['peso']) ? (float) $row['peso'] : null,
-                'shop_id' => $shop ? $shop->id : null,
-                'color' => $color,
-                'size' => $size,
-                'group_code' => $groupCode,
+               // 'slug' => str()->slug($row['nombre_de_producto'] .'-'. $row['color']),
+               'slug' => str()->slug($row['nombre_de_producto']),
+                'stock' =>  isset($row['stock']) && $row['stock'] > 0 ? $row['stock'] : 10,
+               // 'color' => $row['color'],
+
             ]);
 
             if ($item) {
-                if (!empty($row['especificaciones_principales_separadas_por_comas'])) {
-                    $this->saveSpecifications($item, $row['especificaciones_principales_separadas_por_comas'], 'principal');
-                }
+                // 5️⃣ Guardar las especificaciones
+                $this->saveSpecifications($item, $row['especificaciones_principales_separadas_por_comas'], 'principal');
+                $this->saveSpecifications($item, $row['especificaciones_generales_separado_por_comas_y_dos_puntos'], 'general');
 
-                if (!empty($row['especificaciones_generales_separado_por_comas_y_dos_puntos'])) {
-                    $this->saveSpecifications($item, $row['especificaciones_generales_separado_por_comas_y_dos_puntos'], 'general');
-                }
-
+                // 6️⃣ Guardar imágenes en la galería
                 $this->saveGalleryImages($item, $row['sku']);
             } else {
-                \Log::error("No se pudo crear el producto con SKU: " . $row['sku']);
+                throw new Exception("No se pudo obtener el ID del producto con SKU: " . $row['sku']);
             }
-        } catch (\Throwable $e) {
-            \Log::error("Error al procesar fila SKU: " . ($row['sku'] ?? 'N/A') . " - " . $e->getMessage());
-            \Log::error($e->getTraceAsString());
+        } catch (\Exception $e) {
+           dump("Error al procesar fila: " . $e->getMessage());
             $this->addError($e->getMessage());
-            return null;
-        }
-    }
-
-
-    private function validateRequiredFields($row)
-    {
-        $required = ['sku', 'nombre_de_producto', 'categoria', 'subcategoria', 'marca', 'precio'];
-        foreach ($required as $field) {
-            if (empty($row[$field])) {
-                throw new Exception("Required field '{$field}' is missing or empty");
-            }
+            return null; // Continuar con la siguiente fila
         }
     }
 
@@ -150,6 +123,7 @@ class ItemImport implements ToModel, WithHeadingRow, SkipsOnError, SkipsOnFailur
             }
         }
 
+        // Si no encuentra, busca sku_1.ext
         foreach ($extensions as $ext) {
             $path = "images/item/{$sku}_1.{$ext}";
             if (Storage::exists($path)) {
@@ -161,7 +135,6 @@ class ItemImport implements ToModel, WithHeadingRow, SkipsOnError, SkipsOnFailur
 
     private function saveSpecifications($item, $specs, $type)
     {
-        if (empty($specs)) return;
 
         $specsArray = explode(',', $specs);
         foreach ($specsArray as $spec) {
@@ -175,11 +148,13 @@ class ItemImport implements ToModel, WithHeadingRow, SkipsOnError, SkipsOnFailur
             } else {
                 $parts = explode(':', $spec, 2);
                 if (count($parts) == 2) {
+                    $title = trim($parts[0]);
+                    $description = trim($parts[1]);
                     ItemSpecification::create([
                         'item_id' => $item->id,
                         'type' => $type,
-                        'title' => trim($parts[0]),
-                        'description' => trim($parts[1]),
+                        'title' => $title,
+                        'description' => $description,
                     ]);
                 }
             }
@@ -189,14 +164,30 @@ class ItemImport implements ToModel, WithHeadingRow, SkipsOnError, SkipsOnFailur
     private function saveGalleryImages($item, $sku)
     {
         $extensions = ['png', 'jpg', 'jpeg', 'webp'];
+        //$index = 1;
         $index = 2;
 
         while (true) {
             $found = false;
-            foreach ($extensions as $ext) {
-                $filename = "{$sku}_" . ($index < 10 ? $index : str_pad($index, 2, '0', STR_PAD_LEFT)) . ".{$ext}";
-                $path = "images/item/{$filename}";
+             foreach ($extensions as $ext) {
+           $filename = "{$sku}_" . str_pad($index, 2, '0', STR_PAD_LEFT) . ".{$ext}";
+            $filename = "{$sku}_{$index}.{$ext}";
+            $filename = "{$sku}_" . ($index < 10 ? $index : str_pad($index, 2, '0', STR_PAD_LEFT)) . ".{$ext}";
 
+               $path = "images/item/{$filename}";
+            if (Storage::exists($path)) {
+               ItemImage::create([
+                   'item_id' => $item->id,
+                'url' => $filename,
+            ]);
+             $found = true;
+              break;
+             }
+      }
+            foreach ($extensions as $ext) {
+                $filename = "{$sku}_{$index}.{$ext}";
+                $path = "images/item/{$filename}";
+                
                 if (Storage::exists($path)) {
                     ItemImage::create([
                         'item_id' => $item->id,
@@ -216,29 +207,33 @@ class ItemImport implements ToModel, WithHeadingRow, SkipsOnError, SkipsOnFailur
 
     private function isRowEmpty(array $row): bool
     {
+        // Si la fila no tiene SKU, asumimos que está vacía
         if (empty($row['sku']) || is_null($row['sku'])) {
             return true;
         }
 
-        foreach ($row as $value) {
+        // Verificar si todas las columnas están vacías
+        foreach ($row as $key => $value) {
             if (!is_null($value) && trim($value) !== '') {
-                return false;
+                return false; // Hay al menos un dato en la fila
             }
         }
 
-        return true;
+        return true; // La fila está completamente vacía
     }
+
+
 
     public function onError(Throwable $e)
     {
-        $this->addError("General error: " . $e->getMessage());
+        $this->addError("Error general: " . $e->getMessage());
     }
 
     public function onFailure(Failure ...$failures)
     {
         foreach ($failures as $failure) {
             $this->addError(sprintf(
-                "Row %d, Column '%s': %s",
+                "Fila %d, Columna '%s': %s",
                 $failure->row(),
                 $failure->attribute(),
                 implode(', ', $failure->errors())
