@@ -79,10 +79,16 @@ const Generals = ({ generals }) => {
     checkout_dwallet_qr: generals.find(x => x.correlative == 'checkout_dwallet_qr')?.description ?? "",
     checkout_dwallet_name: generals.find(x => x.correlative == 'checkout_dwallet_name')?.description ?? "",
     checkout_dwallet_description: generals.find(x => x.correlative == 'checkout_dwallet_description')?.description ?? "",
-    checkout_transfer: generals.find(x => x.correlative == 'checkout_transfer')?.description?? "",
-    checkout_transfer_cci: generals.find(x => x.correlative == 'checkout_transfer_cci')?.description?? "",
-    checkout_transfer_name: generals.find(x => x.correlative == 'checkout_transfer_name')?.description?? "",
-    checkout_transfer_description: generals.find(x => x.correlative == 'checkout_transfer_description')?.description?? "",
+    checkout_transfer: generals.find(x => x.correlative == 'checkout_transfer')?.description ?? "",
+    checkout_transfer_cci: generals.find(x => x.correlative == 'checkout_transfer_cci')?.description ?? "",
+    checkout_transfer_name: generals.find(x => x.correlative == 'checkout_transfer_name')?.description ?? "",
+    checkout_transfer_description: generals.find(x => x.correlative == 'checkout_transfer_description')?.description ?? "",
+
+    // Importation calculations
+    importation_flete: generals.find(x => x.correlative == 'importation_flete')?.description ?? "",
+    importation_seguro: generals.find(x => x.correlative == 'importation_seguro')?.description ?? "",
+    importation_derecho_arancelario: generals.find(x => x.correlative == 'importation_derecho_arancelario')?.description ?? "",
+    importation_derecho_arancelario_descripcion: generals.find(x => x.correlative == 'importation_derecho_arancelario_descripcion')?.description ?? "",
   });
 
   const [activeTab, setActiveTab] = useState("general");
@@ -267,6 +273,26 @@ const Generals = ({ generals }) => {
           name: "Ubicación",
           description: `${formData.location.lat},${formData.location.lng}`,
         },
+        {
+          correlative: "importation_flete",
+          name: "Flete",
+          description: formData.importation_flete,
+        },
+        {
+          correlative: "importation_seguro",
+          name: "Seguro",
+          description: formData.importation_seguro,
+        },
+        {
+          correlative: "importation_derecho_arancelario",
+          name: "Derecho arancelario",
+          description: formData.importation_derecho_arancelario,
+        },
+        {
+          correlative: "importation_derecho_arancelario_descripcion",
+          name: "Descripción derecho arancelario",
+          description: formData.importation_derecho_arancelario_descripcion,
+        }
       ]);
       // alert('Datos guardados exitosamente');
     } catch (error) {
@@ -314,6 +340,17 @@ const Generals = ({ generals }) => {
           </li>
           <li className="nav-item" role="presentation">
             <button
+              className={`nav-link ${activeTab === "importation" ? "active" : ""
+                }`}
+              onClick={() => setActiveTab("importation")}
+              type="button"
+              role="tab"
+            >
+              Cáculos de importación
+            </button>
+          </li>
+          <li className="nav-item" role="presentation">
+            <button
               className={`nav-link ${activeTab === "policies" ? "active" : ""
                 }`}
               onClick={() => setActiveTab("policies")}
@@ -323,6 +360,7 @@ const Generals = ({ generals }) => {
               Políticas y Términos
             </button>
           </li>
+
           <li className="nav-item" role="presentation">
             <button
               className={`nav-link ${activeTab === "location" ? "active" : ""
@@ -839,6 +877,117 @@ const Generals = ({ generals }) => {
                       />
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className={`tab-pane fade ${activeTab === "importation" ? "show active" : ""}`}
+            role="tabpanel"
+          >
+            <div className="row mb-2">
+              <div className="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3">
+                <div className="mb-3">
+                  <label
+                    htmlFor="importation_flete"
+                    className="form-label"
+                  >
+                    Precio por peso (flete)
+                  </label>
+                  <div className="input-group">
+                    <span className="input-group-text">
+                      <i className="mdi mdi-circle-multiple"></i>
+                    </span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      className="form-control"
+                      id="importation_flete"
+                      value={formData.importation_flete}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          importation_flete: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                    <span className="input-group-text">por kg</span>
+                  </div>
+                </div>
+                <div className="mb-3">
+                  <label
+                    htmlFor="importation_seguro"
+                    className="form-label"
+                  >
+                    Seguro de importación
+                  </label>
+                  <div className="input-group">
+                    <input
+                      type="number"
+                      step="0.01"
+                      className="form-control"
+                      id="importation_seguro"
+                      value={formData.importation_seguro}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          importation_seguro: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                    <span className="input-group-text">%</span>
+                  </div>
+                </div>
+                <div className="mb-3">
+                  <label
+                    htmlFor="importation_derecho_arancelario"
+                    className="form-label"
+                  >
+                    Derechos arancelarios
+                  </label>
+                  <div className="input-group">
+                    <input
+                      type="number"
+                      step="0.01"
+                      className="form-control"
+                      id="importation_derecho_arancelario"
+                      value={formData.importation_derecho_arancelario}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          importation_derecho_arancelario: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                    <span className="input-group-text">%</span>
+                  </div>
+                </div>
+                <div className="mb-3">
+                  <label
+                    htmlFor="importation_derecho_arancelario_descripcion"
+                    className="form-label"
+                  >
+                    Descripción de derechos arancelarios
+                    <small className="text-muted d-block">Que porcentajes se están considerando en cálculo de derechos arancelarios</small>
+                  </label>
+                  <textarea
+                    className="form-control"
+                    id="importation_derecho_arancelario_descripcion"
+                    value={formData.importation_derecho_arancelario_descripcion}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        importation_derecho_arancelario_descripcion: e.target.value,
+                      })
+                    }
+                    rows={3}
+                    style={{ minHeight: (3 * 27), fieldSizing: 'content' }}
+                    required
+                  />
                 </div>
               </div>
             </div>

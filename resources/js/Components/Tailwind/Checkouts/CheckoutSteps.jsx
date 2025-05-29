@@ -3,6 +3,7 @@ import CartStep from "./Components/CartStep";
 import ShippingStep from "./Components/ShippingStep";
 import ConfirmationStep from "./Components/ConfirmationStep";
 import Global from "../../../Utils/Global";
+import General from "../../../Utils/General";
 
 export default function CheckoutSteps({
     cart,
@@ -18,18 +19,38 @@ export default function CheckoutSteps({
         return acc + finalPrice * item.quantity; // Sumar el precio total por cantidad
     }, 0);
 
+    const igvAmount = (Number(General.get('igv_checkout')) || 0) / 100;
+
     // Calcular el subtotal sin IGV (precio base)
-    const subTotal = (totalPrice / 1.18).toFixed(2);
+    const subTotal = (totalPrice / (1 + igvAmount)).toFixed(2);
 
     // Calcular el IGV (18% del subtotal)
-    const igv = (subTotal * 0.18).toFixed(2);
+    const igv = (subTotal * igvAmount).toFixed(2);
 
     // Estado para el costo de envío
     const [envio, setEnvio] = useState(0);
 
+    // Flete
+    const pesoTotal = cart.reduce((acc, item) => {
+        const weight = Number(item.weight) || 0;
+        return acc + weight; // Sumar el precio total por cantidad
+    }, 0);
+    let fleteTotal = 0;
+    const costoxpeso = Number(General.get('importation_flete')) || 0 
+    if (costoxpeso > 0) fleteTotal = pesoTotal * costoxpeso
+
+    // Seguro de importación
+    const seguroImportacion = (Number(General.get('importation_seguro')) || 0) / 100;
+    const seguroImportacionTotal = subTotal * seguroImportacion;
+
+    // Derecho arancelario
+    const derechoArancelario = (Number(General.get('importation_derecho_arancelario')) || 0) / 100;
+    const derechoArancelarioTotal = (parseFloat(subTotal) + parseFloat(costoxpeso) + parseFloat(seguroImportacionTotal)) * derechoArancelario;
+    
     // Calcular el total final (subtotal sin IGV + IGV + envío)
-    const totalFinal =
-        parseFloat(subTotal) + parseFloat(igv) + parseFloat(envio);
+    const totalFinal = parseFloat(subTotal) + parseFloat(igv) + parseFloat(fleteTotal) + parseFloat(seguroImportacionTotal) + parseFloat(derechoArancelarioTotal) + parseFloat(envio);
+
+
     const [sale, setSale] = useState([]);
     const [code, setCode] = useState([]);
     const [delivery, setDelivery] = useState([]);
@@ -114,6 +135,9 @@ export default function CheckoutSteps({
                         subTotal={subTotal}
                         envio={envio}
                         igv={igv}
+                        fleteTotal={fleteTotal}
+                        seguroImportacionTotal={seguroImportacionTotal}
+                        derechoArancelarioTotal={derechoArancelarioTotal}
                         totalFinal={totalFinal}
                     />
                 )}
