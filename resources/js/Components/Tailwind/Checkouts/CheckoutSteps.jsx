@@ -43,12 +43,17 @@ export default function CheckoutSteps({
     const seguroImportacion = (Number(General.get('importation_seguro')) || 0) / 100;
     const seguroImportacionTotal = subTotal * seguroImportacion;
 
+    const CIF = parseFloat(subTotal) + parseFloat(fleteTotal) + parseFloat(seguroImportacionTotal)
+    console.log(CIF)
+
     // Derecho arancelario
     const derechoArancelario = (Number(General.get('importation_derecho_arancelario')) || 0) / 100;
-    const derechoArancelarioTotal = (parseFloat(subTotal) + parseFloat(costoxpeso) + parseFloat(seguroImportacionTotal)) * derechoArancelario;
+    const derechoArancelarioTotal = CIF * derechoArancelario;
     
+    console.log(derechoArancelario, derechoArancelarioTotal)
+
     // Calcular el total final (subtotal sin IGV + IGV + envío)
-    const totalFinal = parseFloat(subTotal) + parseFloat(igv) + parseFloat(fleteTotal) + parseFloat(seguroImportacionTotal) + parseFloat(derechoArancelarioTotal) + parseFloat(envio);
+    const totalFinal = parseFloat(subTotal) + parseFloat(igv) + parseFloat(derechoArancelarioTotal) + parseFloat(envio);
 
 
     const [sale, setSale] = useState([]);
