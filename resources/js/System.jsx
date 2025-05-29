@@ -167,6 +167,7 @@ const System = ({
                 return <Complaint which={value} generals={generals} />
             case "bananalab":
                 return <BananaLab which={value} generals={generals} />
+           
         }
     };
 
