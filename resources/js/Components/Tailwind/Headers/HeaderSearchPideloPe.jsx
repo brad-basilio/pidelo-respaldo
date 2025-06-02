@@ -12,6 +12,7 @@ import {
 import CartModal from "../Components/CartModal";
 import Logout from "../../../Actions/Logout";
 import MobileMenu from "./Components/MobileMenu";
+import { GET } from "sode-extend-react";
 
 const HeaderSearchPideloPe = ({
     items,
@@ -58,8 +59,8 @@ const HeaderSearchPideloPe = ({
         return () =>
             document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-    
-    const [search, setSearch] = useState("");
+
+    const [search, setSearch] = useState(GET.search ?? '');
 
     const options = items.map(item => ({
         value: item.slug,
@@ -135,7 +136,7 @@ const HeaderSearchPideloPe = ({
                     <div className="hidden md:flex mx-auto px-4 relative w-full max-w-xl gap-6 items-center border rounded-full">
                         <Select
                             options={options}
-                            defaultValue={options[0]}
+                            defaultValue={options.find(x => x.value == GET.shop) ?? options[0]}
                             onChange={(option) => setSelectedShop(option.value)}
                             className="w-[200px]"
                             classNamePrefix="react-select"
@@ -158,12 +159,18 @@ const HeaderSearchPideloPe = ({
                                 })
                             }}
                         />
-                      
+
                         <input
                             type="search"
                             placeholder="Buscar productos"
                             value={search}
+                            defaultValue={GET.search ?? ''}
                             onChange={(e) => setSearch(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    window.location.href = handleSearch();
+                                }
+                            }}
                             className="w-full py-4 focus:ring-0 focus:outline-none bg-transparent"
                         />
                         <a
@@ -176,23 +183,55 @@ const HeaderSearchPideloPe = ({
                         </a>
                     </div>
 
-                    {pages.map((page, index) => (
-                  page.menuable && (
-                    <li key={index} className="flex flex-col py-1 lg:py-0">
-                      <a
-                        href={page.path}
-                        className="hover:customtext-primary cursor-pointer transition-all duration-300 pr-6"
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        {page.name}
-                      </a>
-                    </li>
-                  )
-                ))}
+                    {/* Botón de carrito con badge */}
+                    <div className="flex items-center gap-4">
 
+                        {pages.map((page, index) => (
+                            page.menuable && (
+                                <li key={index} className="flex flex-col py-1 lg:py-0">
+                                    <a
+                                        href={page.path}
+                                        className="hover:customtext-primary cursor-pointer transition-all duration-300 pr-6"
+                                        onClick={() => setMenuOpen(false)}
+                                    >
+                                        {page.name}
+                                    </a>
+                                </li>
+                            )
+                        ))}
+
+                    </div>
+                    <button
+                        onClick={() => setModalOpen(true)}
+                        className="relative p-2 hover:bg-gray-100 rounded-full transition-all duration-300"
+                        aria-label="Carrito de compras"
+                    >
+                        <ShoppingCart className="h-6 w-6" />
+                        {totalCount > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                {totalCount}
+                            </span>
+                        )}
+                    </button>
                 </div>
-             
             </div>
+
+            {/* Modal del carrito */}
+            <CartModal
+                data={data}
+                modalOpen={modalOpen}
+                setModalOpen={setModalOpen}
+                cart={cart}
+                setCart={setCart}
+            />
+
+            {openMenu && (
+                <MobileMenu
+                    setOpenMenu={setOpenMenu}
+                    pages={pages}
+                    isUser={isUser}
+                />
+            )}
         </header>
     );
 };

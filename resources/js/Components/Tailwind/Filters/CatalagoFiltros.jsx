@@ -105,7 +105,7 @@ const CatalagoFiltros = ({ items, data, filteredData, cart, setCart }) => {
                 "=",
                 id,
             ]);
-            transformedFilters.push(["or", ...shopConditions]);
+            transformedFilters.push(shopConditions);
         }
         if (filters.collection_id.length > 0) {
             const collectionConditions = filters.collection_id.map((id) => [
@@ -158,7 +158,7 @@ const CatalagoFiltros = ({ items, data, filteredData, cart, setCart }) => {
             transformedFilters.push(["name", "contains", filters.name]);
         }
 
-        return transformedFilters;
+        return ArrayJoin(transformedFilters, 'and');
     };
     // Obtener productos filtrados desde el backend
     const fetchProducts = async (page = 1) => {

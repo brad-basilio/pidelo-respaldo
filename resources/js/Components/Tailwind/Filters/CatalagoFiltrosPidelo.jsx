@@ -17,6 +17,7 @@ import SelectForm from "./Components/SelectForm";
 import ProductCardScraping from "../Scraping/Components/ProductCardScraping";
 import { set } from "sode-extend-react/sources/cookies";
 import ScrapRest from "../../../Actions/Scraping/ScrapRest";
+import { GET } from "sode-extend-react";
 
 const itemsRest = new ItemsRest();
 
@@ -68,7 +69,7 @@ const CatalagoFiltrosPidelo = ({
         brand_id: [], // Array para múltiples marcas
         subcategory_id: [],
         price: null,
-        name: null,
+        name: GET.search ?? null,
         sort_by: "created_at",
         order: "desc",
     });
@@ -127,7 +128,7 @@ const CatalagoFiltrosPidelo = ({
         if (filters.name) {
             transformedFilters.push(["name", "contains", filters.name]);
         }
-        return transformedFilters;
+        return ArrayJoin(transformedFilters, 'and');
     };
     // Obtener productos filtrados desde el backend
     const fetchProducts = async (page = 1) => {

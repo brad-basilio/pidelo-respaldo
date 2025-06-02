@@ -111,7 +111,7 @@ export default function MobileMenu({ search, setSearch, pages, items }) {
                             />
                             <a
                                 href={
-                                    search.trim()
+                                    search?.trim()
                                         ? `/catalogo?search=${encodeURIComponent(
                                               search
                                           )}`

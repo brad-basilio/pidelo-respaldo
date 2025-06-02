@@ -9,21 +9,21 @@ const ProductDetailSF = React.lazy(() => import('./ProductDetails/ProductDetailS
 const ProductDetailBananaLab = React.lazy(() => import('./ProductDetails/ProductDetailBananaLab'))
 const ProductDetailKuchara = React.lazy(() => import('./ProductDetails/ProductDetailKuchara'))
 
-const ProductDetail = ({ which, item, cart, setCart }) => {
+const ProductDetail = ({ which, data, item, cart, setCart }) => {
   const getProductDetail = () => {
     switch (which) {
       case 'ProductDetailSimple':
         return <ProductDetailSimple item={item} cart={cart} setCart={setCart} />
       case 'ProductDetailB':
-        return <ProductDetailB item={item} cart={cart} setCart={setCart} />
+        return <ProductDetailB data={data} item={item} cart={cart} setCart={setCart} />
       case 'ScrapingProductDetail':
         return <ScrapingProductDetail cart={cart} setCart={setCart} />
       case 'ProductDetailSF':
         return <ProductDetailSF item={item} cart={cart} setCart={setCart} />
-        case 'ProductDetailBananaLab':
-          return <ProductDetailBananaLab item={item} cart={cart} setCart={setCart} />
-        case 'ProductDetailKuchara':
-          return <ProductDetailKuchara item={item} cart={cart} setCart={setCart} />
+      case 'ProductDetailBananaLab':
+        return <ProductDetailBananaLab item={item} cart={cart} setCart={setCart} />
+      case 'ProductDetailKuchara':
+        return <ProductDetailKuchara item={item} cart={cart} setCart={setCart} />
       default:
         return <div className="w-full px-[5%] replace-max-w-here p-4 mx-auto">- No Hay componente <b>{which}</b> -</div>
     }
