@@ -13,6 +13,8 @@ import { Notify } from "sode-extend-react";
 import { useUbigeo } from "../../../../Utils/useUbigeo";
 import AsyncSelect from "react-select/async";
 import { debounce } from "lodash";
+import General from "../../../../Utils/General";
+import Tippy from "@tippyjs/react";
 
 export default function ShippingStep({
     cart,
@@ -27,6 +29,9 @@ export default function ShippingStep({
     totalFinal,
     user,
     setEnvio,
+    fleteTotal,
+    seguroImportacionTotal,
+    derechoArancelarioTotal,
     envio,
     ubigeos = [],
 }) {
@@ -549,10 +554,42 @@ export default function ShippingStep({
                         <span>Subtotal:</span>
                         <span>S/ {Number2Currency(subTotal)}</span>
                     </div>
-                    <div className="flex justify-between">
-                        <span>IGV (18%):</span>
-                        <span>S/ {Number2Currency(igv)}</span>
-                    </div>
+                    {
+                        Number(General.get('igv_checkout')) > 0 &&
+                        <div className="flex justify-between">
+                            <span className="customtext-neutral-dark">IGV</span>
+                            <span className="font-semibold">S/ {Number2Currency(igv)}</span>
+                        </div>
+                    }
+                    {
+                        Number(General.get('importation_flete')) > 0 &&
+                        <div className="flex justify-between">
+                            <span className="customtext-neutral-dark">Flete (S/ 7.00/Kg)</span>
+                            <span className="font-semibold">S/ {Number2Currency(fleteTotal)}</span>
+                        </div>
+                    }
+                    {
+                        Number(General.get('importation_seguro')) > 0 &&
+                        <div className="flex justify-between">
+                            <span className="customtext-neutral-dark">Seguro ({Number(General.get('importation_seguro')).toFixed(2)}%)</span>
+                            <span className="font-semibold">S/ {Number2Currency(seguroImportacionTotal)}</span>
+                        </div>
+                    }
+                    {
+                        Number(General.get('importation_derecho_arancelario')) > 0 &&
+                        <div className="flex justify-between">
+                            <span className="customtext-neutral-dark">
+                                Derecho arancelario
+                                {
+                                    General.get('importation_derecho_arancelario_descripcion') &&
+                                    <Tippy content={<p className="whitespace-pre-line">{General.get('importation_derecho_arancelario_descripcion')}</p>} allowHTML>
+                                        <i className="mdi mdi-information ms-1"></i>
+                                    </Tippy>
+                                }
+                                </span>
+                            <span className="font-semibold">S/ {Number2Currency(derechoArancelarioTotal)}</span>
+                        </div>
+                    }
                     <div className="flex justify-between">
                         <span>Envío:</span>
                         <span>S/ {Number2Currency(envio)}</span>
