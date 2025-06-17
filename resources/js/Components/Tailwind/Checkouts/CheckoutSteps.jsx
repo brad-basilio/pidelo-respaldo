@@ -84,6 +84,9 @@ export default function CheckoutSteps({
 
         return null; // No renderiza nada, solo carga Culqi en el contexto de la app
     }, []);
+
+    console.log(Global.currency)
+
     return (
         <div className="min-h-screen bg-[#F7F9FB] py-12 px-primary 2xl:px-0 2xl:max-w-7xl mx-auto">
             <div className="bg-white   p-8 rounded-xl">

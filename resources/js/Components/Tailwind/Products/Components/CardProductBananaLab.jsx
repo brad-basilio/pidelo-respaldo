@@ -7,6 +7,7 @@ import CartModal from "../../Components/CartModal";
 import { toast, Toaster } from "sonner";
 import CartModalBananaLab from "../../Components/CartModalBananaLab";
 import Tippy from "@tippyjs/react";
+import { CurrencySymbol } from "../../../../Utils/Number2Currency";
 
 const CardProductBananaLab = ({
     data,
@@ -120,7 +121,7 @@ const CardProductBananaLab = ({
                         {/* Precio */}
                         <div className="flex flex-col lg:flex-row lg:justify-between items-baseline mt-1">
                             <span className="customtext-neutral-dark text-[20px] md:text-2xl font-bold">
-                                S/ {product.final_price}
+                                {CurrencySymbol()}{product.final_price}
                             </span>
                             {/*  <p className="text-[10px] lg:text-xs customtext-neutral-dark mt-1">
                                 Más vendidos (100)

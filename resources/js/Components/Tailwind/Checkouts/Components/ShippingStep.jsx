@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Select from "react-select";
-import Number2Currency from "../../../../Utils/Number2Currency";
+import Number2Currency, { CurrencySymbol } from "../../../../Utils/Number2Currency";
 import ubigeoData from "../../../../../../storage/app/utils/ubigeo.json";
 import DeliveryPricesRest from "../../../../Actions/DeliveryPricesRest";
 import { processCulqiPayment } from "../../../../Actions/culqiPayment";
@@ -342,7 +342,7 @@ export default function ShippingStep({
                                     zIndex: 9999,
                                     marginTop: "4px",
                                     borderRadius: "8px",
-                                  //  boxShadow: "none",
+                                    //  boxShadow: "none",
                                 }),
                                 option: (base) => ({
                                     ...base,
@@ -454,10 +454,10 @@ export default function ShippingStep({
                                             option.type === "free"
                                                 ? option.deliveryType
                                                 : option.type === "express"
-                                                ? option.deliveryType
-                                                : option.type === "agency"
-                                                ? option.deliveryType
-                                                : option.deliveryType
+                                                    ? option.deliveryType
+                                                    : option.type === "agency"
+                                                        ? option.deliveryType
+                                                        : option.deliveryType
                                         }
                                         price={option.price}
                                         description={option.description}
@@ -533,6 +533,7 @@ export default function ShippingStep({
                         <div key={item.id} className="flex items-center gap-4">
                             <img
                                 src={`/storage/images/item/${item.image}`}
+                                onError={(e) => e.target.src = "/assets/img/noimage/no_img.jpg"}
                                 alt={item.name}
                                 className="w-16 h-16 object-cover rounded-lg"
                             />
@@ -542,7 +543,7 @@ export default function ShippingStep({
                                     Cantidad: {item.quantity}
                                 </p>
                                 <p className="text-sm text-gray-600">
-                                    S/ {Number2Currency(item.price)}
+                                    {CurrencySymbol()}{Number2Currency(item.price)}
                                 </p>
                             </div>
                         </div>
@@ -552,27 +553,27 @@ export default function ShippingStep({
                 <div className="space-y-4 mt-6">
                     <div className="flex justify-between">
                         <span>Subtotal:</span>
-                        <span>S/ {Number2Currency(subTotal)}</span>
+                        <span>{CurrencySymbol()}{Number2Currency(subTotal)}</span>
                     </div>
                     {
                         Number(General.get('igv_checkout')) > 0 &&
                         <div className="flex justify-between">
                             <span className="customtext-neutral-dark">IGV</span>
-                            <span className="font-semibold">S/ {Number2Currency(igv)}</span>
+                            <span className="font-semibold">{CurrencySymbol()}{Number2Currency(igv)}</span>
                         </div>
                     }
-                    {
+                    {/* {
                         Number(General.get('importation_flete')) > 0 &&
                         <div className="flex justify-between">
-                            <span className="customtext-neutral-dark">Flete (S/ 7.00/Kg)</span>
-                            <span className="font-semibold">S/ {Number2Currency(fleteTotal)}</span>
+                            <span className="customtext-neutral-dark">Flete ({CurrencySymbol()}7.00/Kg)</span>
+                            <span className="font-semibold">{CurrencySymbol()}{Number2Currency(fleteTotal)}</span>
                         </div>
-                    }
+                    } */}
                     {
                         Number(General.get('importation_seguro')) > 0 &&
                         <div className="flex justify-between">
                             <span className="customtext-neutral-dark">Seguro ({Number(General.get('importation_seguro')).toFixed(2)}%)</span>
-                            <span className="font-semibold">S/ {Number2Currency(seguroImportacionTotal)}</span>
+                            <span className="font-semibold">{CurrencySymbol()}{Number2Currency(seguroImportacionTotal)}</span>
                         </div>
                     }
                     {
@@ -586,19 +587,19 @@ export default function ShippingStep({
                                         <i className="mdi mdi-information ms-1"></i>
                                     </Tippy>
                                 }
-                                </span>
-                            <span className="font-semibold">S/ {Number2Currency(derechoArancelarioTotal)}</span>
+                            </span>
+                            <span className="font-semibold">{CurrencySymbol()}{Number2Currency(derechoArancelarioTotal)}</span>
                         </div>
                     }
                     <div className="flex justify-between">
                         <span>Envío:</span>
-                        <span>S/ {Number2Currency(envio)}</span>
+                        <span>{CurrencySymbol()}{Number2Currency(envio)}</span>
                     </div>
 
                     <div className="pt-4 border-t-2">
                         <div className="flex justify-between font-bold text-lg">
                             <span>Total:</span>
-                            <span>S/ {Number2Currency(totalFinal)}</span>
+                            <span>{CurrencySymbol()}{Number2Currency(totalFinal)}</span>
                         </div>
                     </div>
 

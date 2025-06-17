@@ -8,7 +8,7 @@ import ReactAppend from "../Utils/ReactAppend";
 import Swal from "sweetalert2";
 import SalesRest from "../Actions/Admin/SalesRest";
 import Global from "../Utils/Global";
-import Number2Currency from "../Utils/Number2Currency";
+import Number2Currency, { CurrencySymbol } from "../Utils/Number2Currency";
 import Modal from "../Components/Adminto/Modal";
 import Tippy from "@tippyjs/react";
 import SaleStatusesRest from "../Actions/Admin/SaleStatusesRest";
@@ -173,7 +173,7 @@ const Sales = ({ statuses = [] }) => {
                             const coupon_discount =
                                 Number(data.coupon_discount) || 0;
                             container.text(
-                                `S/. ${Number2Currency(
+                                `${CurrencySymbol()}${Number2Currency(
                                     amount +
                                         delivery -
                                         bundle_discount -
@@ -337,7 +337,7 @@ const Sales = ({ statuses = [] }) => {
                                                         <td>{detail.name}</td>
                                                         <td align="right">
                                                             <span className="text-nowrap">
-                                                                S/{" "}
+                                                                {CurrencySymbol()}
                                                                 {Number2Currency(
                                                                     detail.price
                                                                 )}
@@ -348,7 +348,7 @@ const Sales = ({ statuses = [] }) => {
                                                         </td>
                                                         <td align="right">
                                                             <span className="text-nowrap">
-                                                                S/{" "}
+                                                                {CurrencySymbol()}
                                                                 {Number2Currency(
                                                                     totalPrice
                                                                 )}
@@ -371,7 +371,7 @@ const Sales = ({ statuses = [] }) => {
                                 <div className="d-flex justify-content-between">
                                     <b>Subtotal:</b>
                                     <span>
-                                        S/{" "}
+                                        {CurrencySymbol()}
                                         {Number2Currency(
                                             saleLoaded?.amount * 1
                                         )}
@@ -380,7 +380,7 @@ const Sales = ({ statuses = [] }) => {
                                 <div className="d-flex justify-content-between">
                                     <b>Envío:</b>
                                     <span>
-                                        S/{" "}
+                                        {CurrencySymbol()}
                                         {Number2Currency(saleLoaded?.delivery)}
                                     </span>
                                 </div>
@@ -389,7 +389,7 @@ const Sales = ({ statuses = [] }) => {
                                     <b>Total:</b>
                                     <span>
                                         <strong>
-                                            S/ {Number2Currency(totalAmount)}
+                                            {CurrencySymbol()}{Number2Currency(totalAmount)}
                                         </strong>
                                     </span>
                                 </div>

@@ -110,7 +110,7 @@ class DeliveryPriceController extends BasicController
             $response->status = 200;
             $response->message = 'Precios obtenidos correctamente';
         }, function ($e) {
-           \Log::error('Error en getDeliveryPrice: ' . $e->getMessage());
+        //    \Log::error('Error en getDeliveryPrice: ' . $e->getMessage());
          //  dump('Error en getDeliveryPrice: ' . $e->getMessage());
         });
 

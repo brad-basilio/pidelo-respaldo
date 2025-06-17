@@ -55,7 +55,7 @@ class BasicController extends Controller
       if ($snake_case === 'item_image') {
         $snake_case = 'item';
       }
-     
+
       if (Text::has($uuid, '.')) {
         $route = "images/{$snake_case}/{$uuid}";
       } else {
@@ -103,6 +103,7 @@ class BasicController extends Controller
     $properties = [
       'session' => $session,
       'global' => [
+        'currency' => General::select('description')->where('correlative', 'currency')->first()->description ?? 'pen',
         'PUBLIC_RSA_KEY' => Controller::$PUBLIC_RSA_KEY,
         'APP_NAME' => env('APP_NAME', 'Trasciende'),
         'APP_STYLE' => env('APP_STYLE', 'light'),
@@ -212,7 +213,7 @@ class BasicController extends Controller
       $response->summary = $this->setPaginationSummary($request, $instance);
       $response->totalCount = $totalCount;
     } catch (\Throwable $th) {
-     // dump($th);
+      // dump($th);
       $response->message = $th->getMessage() . ' Ln.' . $th->getLine();
     } finally {
       return response(

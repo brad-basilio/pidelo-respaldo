@@ -16,6 +16,7 @@ import { NoResults } from "../Components/Resources/NoResult";
 import SelectForm from "./Components/SelectForm";
 import ProductCard from "../Components/ProductCard";
 import ProductCardSimple from "../Products/Components/ProductCardSimple";
+import { CurrencySymbol } from "../../../Utils/Number2Currency";
 
 const itemsRest = new ItemsRest();
 
@@ -538,7 +539,7 @@ const FilterSalaFabulosa = ({ items, data, filteredData, cart, setCart }) => {
                                                         .max === range.max
                                                 }
                                             />
-                                            <span>{`S/ ${range.min} - S/ ${range.max}`}</span>
+                                            <span>{`${CurrencySymbol()}${range.min} - ${CurrencySymbol()}${range.max}`}</span>
                                         </label>
                                     ))}
                                 </div>

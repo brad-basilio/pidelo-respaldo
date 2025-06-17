@@ -21,6 +21,7 @@ import CartModal from "../Components/CartModal";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import ProductNavigation from "../Products/ProductNavigation";
+import { CurrencySymbol } from "../../../Utils/Number2Currency";
 
 export default function ProductDetailSF({ item, data, setCart, cart }) {
     console.log("VENIMOS DESDE ITEM DE PRODUCTDETAIL SF:", item);
@@ -312,12 +313,12 @@ export default function ProductDetailSF({ item, data, setCart, cart }) {
                                 <p className="text-sm 2xl:text-base customtext-neutral-light">
                                     Precio:{" "}
                                     <span className="line-through">
-                                        S/ {item?.price}
+                                        {CurrencySymbol()}{item?.price}
                                     </span>
                                 </p>
                                 <div className="flex flex-row items-center gap-4 relative">
                                     <span className="text-[40px] font-bold customtext-neutral-dark">
-                                        S/ {item?.final_price}
+                                        {CurrencySymbol()}{item?.final_price}
                                     </span>
                                     <span className="bg-[#F93232] text-white font-bold px-3 py-2 rounded-xl text-base">
                                         -

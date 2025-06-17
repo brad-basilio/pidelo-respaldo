@@ -1,0 +1,1 @@
+import{G as e}from"./Global-CQLDm_nT.js";const i=(r,t="en-US")=>(Number(r)||0).toLocaleString(t,{maximumFractionDigits:2,minimumFractionDigits:2}),u=()=>{switch(e.currency){case"usd":return"$";default:return"S/. "}};export{u as C,i as N};

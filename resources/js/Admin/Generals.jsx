@@ -67,6 +67,9 @@ const Generals = ({ generals }) => {
     igvCheckout:
       generals.find((x) => x.correlative == "igv_checkout")
         ?.description ?? "",
+    currency:
+      generals.find((x) => x.correlative == "currency")
+        ?.description ?? "",
     location: {
       lat: Number(location.split(",").map((x) => x.trim())[0]),
       lng: Number(location.split(",").map((x) => x.trim())[1]),
@@ -207,6 +210,11 @@ const Generals = ({ generals }) => {
           correlative: "igv_checkout",
           name: "IGV en el checkout",
           description: formData.igvCheckout,
+        },
+        {
+          correlative: 'currency',
+          name: 'Moneda',
+          description: formData.currency,
         },
         {
           correlative: "checkout_culqi",
@@ -450,7 +458,7 @@ const Generals = ({ generals }) => {
                 className="form-label"
               >
                 IGV
-                <small className="d-block text-muted">Dejar en 0 si no se quiere mostrar</small>
+                <small className="d-block text-muted" style={{ fontWeight: 'lighter' }}>Dejar en 0 si no se quiere mostrar</small>
               </label>
               <input
                 type="number"
@@ -465,6 +473,29 @@ const Generals = ({ generals }) => {
                   })
                 }
               />
+            </div>
+            <div className="mb-2">
+              <label
+                htmlFor="currency"
+                className="form-label"
+              >
+                Moneda
+                <small className="d-block text-muted" style={{ fontWeight: 'lighter' }}>Que moneda maneja tu empresa?</small>
+              </label>
+              <select
+                className="form-control"
+                id="currency"
+                value={formData.currency}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    currency: e.target.value,
+                  })
+                }
+              >
+                <option value="pen">Soles (S/)</option>
+                <option value="usd">Dólares ($)</option>
+              </select>
             </div>
           </div>
         </div>

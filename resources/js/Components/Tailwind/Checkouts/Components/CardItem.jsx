@@ -1,4 +1,5 @@
 import { Minus, Plus, PlusCircle, Trash2 } from "lucide-react";
+import { CurrencySymbol } from "../../../../Utils/Number2Currency";
 
 const CardItem = ({ setCart, ...item }) => {
 
@@ -29,12 +30,12 @@ const CardItem = ({ setCart, ...item }) => {
             }).filter(Boolean)
         );
     }
-    console.log(item);
     return (
         <div key={item.id} className="bg-white rounded-lg shadow p-4">
             <div className="flex items-center gap-4">
                 <img
                     src={`/storage/images/item/${item.image}`}
+                    onError={(e) => e.target.src = "/assets/img/noimage/no_img.jpg"}
                     alt={item.name}
                     className="w-20 h-20 object-cover rounded"
                 />
@@ -47,8 +48,8 @@ const CardItem = ({ setCart, ...item }) => {
                 </div>
                 <div className="flex items-center gap-4">
                     <div className="w-36 text-right">
-                        <div className="text-xs text-gray-500 line-through">S/ {Number(item.price * item.quantity).toFixed(2)}</div>
-                        <div className="font-bold text-lg mt-2">S/ {Number(item.final_price * item.quantity).toFixed(2)}</div>
+                        <div className="text-xs text-gray-500 line-through">{CurrencySymbol()}{Number(item.price * item.quantity).toFixed(2)}</div>
+                        <div className="font-bold text-lg mt-2">{CurrencySymbol()}{Number(item.final_price * item.quantity).toFixed(2)}</div>
 
                         <div className="flex items-center gap-4 mt-2">
                             <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden shadow-sm">

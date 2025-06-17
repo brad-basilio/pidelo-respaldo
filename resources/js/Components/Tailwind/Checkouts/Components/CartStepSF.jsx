@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Number2Currency from "../../../../Utils/Number2Currency";
+import Number2Currency, { CurrencySymbol } from "../../../../Utils/Number2Currency";
 
 import ButtonPrimary from "./ButtonPrimary";
 import ButtonSecondary from "./ButtonSecondary";
@@ -54,20 +54,20 @@ export default function CartStepSF({ cart, setCart, onContinue, subTotal, envio,
                 <div className="space-y-4">
                     <div className="flex justify-between">
                         <span className="customtext-neutral-dark">Subtotal</span>
-                        <span className="font-semibold">S/ {Number2Currency(subTotal)}</span>
+                        <span className="font-semibold">{CurrencySymbol()}{Number2Currency(subTotal)}</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="customtext-neutral-dark">IGV</span>
-                        <span className="font-semibold">S/ {Number2Currency(igv)}</span>
+                        <span className="font-semibold">{CurrencySymbol()}{Number2Currency(igv)}</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="customtext-neutral-dark">Envío</span>
-                        <span className="font-semibold">S/ {Number2Currency(envio)}</span>
+                        <span className="font-semibold">{CurrencySymbol()}{Number2Currency(envio)}</span>
                     </div>
                     <div className="py-3 border-y-2 mt-6">
                         <div className="flex justify-between font-bold text-[20px] items-center">
                             <span>Total</span>
-                            <span>S/ {Number2Currency(totalFinal)}</span>
+                            <span>{CurrencySymbol()}{Number2Currency(totalFinal)}</span>
                         </div>
                     </div>
                     <div className="space-y-2 pt-4">

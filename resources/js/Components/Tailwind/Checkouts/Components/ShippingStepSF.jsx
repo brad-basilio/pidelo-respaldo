@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Number2Currency from "../../../../Utils/Number2Currency";
+import Number2Currency, { CurrencySymbol } from "../../../../Utils/Number2Currency";
 import ubigeoData from "../../../../../../storage/app/utils/ubigeo.json";
 import DeliveryPricesRest from "../../../../Actions/DeliveryPricesRest";
 import { processCulqiPayment } from "../../../../Actions/culqiPayment";
@@ -515,25 +515,25 @@ export default function ShippingStepSF({
                             Subtotal
                         </span>
                         <span className="font-semibold">
-                            S/ {Number2Currency(subTotal)}
+                            {CurrencySymbol()}{Number2Currency(subTotal)}
                         </span>
                     </div>
                     <div className="flex justify-between">
                         <span className="customtext-neutral-dark">IGV</span>
                         <span className="font-semibold">
-                            S/ {Number2Currency(igv)}
+                            {CurrencySymbol()}{Number2Currency(igv)}
                         </span>
                     </div>
                     <div className="flex justify-between">
                         <span className="customtext-neutral-dark">Envío</span>
                         <span className="font-semibold">
-                            S/ {Number2Currency(envio)}
+                            {CurrencySymbol()}{Number2Currency(envio)}
                         </span>
                     </div>
                     <div className="py-3 border-y-2 mt-6">
                         <div className="flex justify-between font-bold text-[20px] items-center">
                             <span>Total</span>
-                            <span>S/ {Number2Currency(totalFinal)}</span>
+                            <span>{CurrencySymbol()}{Number2Currency(totalFinal)}</span>
                         </div>
                     </div>
                     <div className="space-y-2 pt-4">

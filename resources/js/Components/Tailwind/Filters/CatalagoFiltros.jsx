@@ -10,6 +10,7 @@ import SelectForm from "./Components/SelectForm";
 import { GET } from "sode-extend-react";
 import Global from "../../../Utils/Global";
 import CardProductPideloPe from "../Products/Components/CardProductPideloPe";
+import { CurrencySymbol } from "../../../Utils/Number2Currency";
 
 const itemsRest = new ItemsRest();
 
@@ -654,7 +655,7 @@ const CatalagoFiltros = ({ items, data, filteredData, cart, setCart }) => {
                                                         .max === range.max
                                                 }
                                             />
-                                            <span>{`S/ ${range.min} - S/ ${range.max}`}</span>
+                                            <span>{`${CurrencySymbol()}${range.min} - ${CurrencySymbol()}${range.max}`}</span>
                                         </label>
                                     ))}
                                 </div>

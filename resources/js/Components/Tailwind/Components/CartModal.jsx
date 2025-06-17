@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactModal from "react-modal";
 import CartItemRow from "./CartItemRow";
-import Number2Currency from "../../../Utils/Number2Currency";
+import Number2Currency, { CurrencySymbol } from "../../../Utils/Number2Currency";
 import Global from "../../../Utils/Global";
 import { Local } from "sode-extend-react";
 
@@ -57,7 +57,7 @@ const CartModal = ({ data, cart, setCart, modalOpen, setModalOpen }) => {
             <div className="font-font-general flex flex-col gap-2 pt-2">
                 <div className="text-[#141718] font-semibold text-xl flex justify-between items-center">
                     <b>Total</b>
-                    <b id="itemsTotal">S/. {Number2Currency(totalPrice)}</b>
+                    <b id="itemsTotal">{CurrencySymbol()}{Number2Currency(totalPrice)}</b>
                 </div>
                 <div>
                     <button

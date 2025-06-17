@@ -17,6 +17,7 @@ import Swal from "sweetalert2";
 import { Notify } from "sode-extend-react";
 import ProductInfinite from "../Products/ProductInfinite";
 import CartModal from "../Components/CartModal";
+import { CurrencySymbol } from "../../../Utils/Number2Currency";
 
 export default function ProductDetail({ item, data, setCart, cart }) {
     const itemsRest = new ItemsRest();
@@ -272,12 +273,12 @@ export default function ProductDetail({ item, data, setCart, cart }) {
                                     <p className="text-sm customtext-neutral-light mb-1">
                                         Precio:{" "}
                                         <span className="line-through line-clamp-1">
-                                            S/ {item?.price}
+                                            {CurrencySymbol()}{item?.price}
                                         </span>
                                     </p>
                                     <div className="flex items-center gap-4 ">
                                         <span className="text-[40px] font-bold line-clamp-1">
-                                            S/ {item?.final_price}
+                                            {CurrencySymbol()}{item?.final_price}
                                         </span>
                                         <span className="bg-[#F93232] text-white font-bold px-3 py-2 rounded-xl">
                                             -
@@ -424,7 +425,7 @@ export default function ProductDetail({ item, data, setCart, cart }) {
                                             </p>
                                         </div>
                                         <p className="font-bold customtext-neutral-dark">
-                                            S/{" "}
+                                            {CurrencySymbol()}
                                             {parseFloat(
                                                 product.final_price
                                             ).toFixed(2)}
@@ -438,7 +439,7 @@ export default function ProductDetail({ item, data, setCart, cart }) {
                                     </span>
 
                                     <p className="font-bold mb-2 customtext-neutral-dark">
-                                        S/ {total.toFixed(2)}
+                                        {CurrencySymbol()}{total.toFixed(2)}
                                     </p>
                                     <button
                                         onClick={() => addAssociatedItems()}
@@ -581,12 +582,12 @@ export default function ProductDetail({ item, data, setCart, cart }) {
                                     <p className="text-sm customtext-neutral-light mb-1">
                                         Precio:{" "}
                                         <span className="line-through">
-                                            S/ {item?.price}
+                                            {CurrencySymbol()}{item?.price}
                                         </span>
                                     </p>
                                     <div className="flex items-center gap-4 relative ">
                                         <span className="text-[40px] font-bold ">
-                                            S/ {item?.final_price}
+                                            {CurrencySymbol()}{item?.final_price}
                                         </span>
                                         <span className=" absolute -top-8 right-0 bg-[#F93232] text-white font-bold px-3 py-2 rounded-xl">
                                             -
@@ -678,7 +679,7 @@ export default function ProductDetail({ item, data, setCart, cart }) {
                                             </span>
 
                                             <p className="font-bold mb-2 customtext-neutral-dark">
-                                                S/ {total.toFixed(2)}
+                                                {CurrencySymbol()}{total.toFixed(2)}
                                             </p>
                                             <button
                                                 onClick={() =>
@@ -706,7 +707,7 @@ export default function ProductDetail({ item, data, setCart, cart }) {
                                                 </p>
                                             </div>
                                             <p className="font-bold customtext-neutral-dark">
-                                                S/{" "}
+                                                {CurrencySymbol()}
                                                 {parseFloat(
                                                     product.final_price
                                                 ).toFixed(2)}

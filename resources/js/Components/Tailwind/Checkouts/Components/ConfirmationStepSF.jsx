@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Number2Currency from "../../../../Utils/Number2Currency";
+import Number2Currency, { CurrencySymbol } from "../../../../Utils/Number2Currency";
 import { recoveryOrderData } from "../../../../Actions/recoveryOrderData";
 import ButtonPrimary from "./ButtonPrimary";
 import { Local } from "sode-extend-react";
@@ -109,7 +109,7 @@ export default function ConfirmationStepSF({setCart, cart, code, delivery }) {
                                             </p>
                                             <p className="text-sm customtext-neutral-light">
                                                 Cantidad: <span className="customtext-neutral-dark">{parseInt(item.quantity)}</span> - 
-                                                Precio: <span className="customtext-neutral-dark"> S/ {Number2Currency(item.price)}</span>
+                                                Precio: <span className="customtext-neutral-dark"> {CurrencySymbol()}{Number2Currency(item.price)}</span>
                                             </p>
                                         </div>
                                     </div>
@@ -120,20 +120,20 @@ export default function ConfirmationStepSF({setCart, cart, code, delivery }) {
                         <div className="space-y-4 mt-6">
                             <div className="flex justify-between">
                                 <span className="customtext-neutral-dark">Subtotal</span>
-                                <span className="font-semibold">S/ {Number2Currency(subTotal)}</span>
+                                <span className="font-semibold">{CurrencySymbol()}{Number2Currency(subTotal)}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span className="customtext-neutral-dark">IGV</span>
-                                <span className="font-semibold">S/ {Number2Currency(igv)}</span>
+                                <span className="font-semibold">{CurrencySymbol()}{Number2Currency(igv)}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span className="customtext-neutral-dark">Envío</span>
-                                <span className="font-semibold">S/ {Number2Currency(order.delivery)}</span>
+                                <span className="font-semibold">{CurrencySymbol()}{Number2Currency(order.delivery)}</span>
                             </div>
                             <div className="py-3 border-y-2 mt-6">
                                 <div className="flex justify-between font-bold text-[20px] items-center">
                                     <span>Total</span>
-                                    <span>S/ {Number2Currency(totalFinal)}</span>
+                                    <span>{CurrencySymbol()}{Number2Currency(totalFinal)}</span>
                                 </div>
                             </div>
                         </div>

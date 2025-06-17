@@ -1,6 +1,6 @@
 import Tippy from "@tippyjs/react"
 import React from "react"
-import Number2Currency from "../../../Utils/Number2Currency"
+import Number2Currency, { CurrencySymbol } from "../../../Utils/Number2Currency"
 import { Minus, Plus } from "lucide-react"
 
 const CartItemRow = ({ setCart, ...item }) => {
@@ -67,7 +67,7 @@ const CartItemRow = ({ setCart, ...item }) => {
           item?.discount > 0 &&
           <span className="block text-xs line-through -mb-1">{Number2Currency(item?.price)}</span>
         }
-        S/. {Number2Currency(item?.final_price)}
+        {CurrencySymbol()}{Number2Currency(item?.final_price)}
       </p>
       <Tippy content='Quitar'>
         <button type="button" onClick={() => onDeleteClicked(item?.id)} className="w-max h-6 flex justify-center items-center ms-auto">

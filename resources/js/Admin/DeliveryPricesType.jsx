@@ -14,7 +14,7 @@ import InputFormGroup from "../Components/Adminto/form/InputFormGroup";
 import SelectFormGroup from "../Components/Adminto/form/SelectFormGroup";
 import SwitchFormGroup from "../Components/Adminto/form/SwitchFormGroup";
 import TextareaFormGroup from "../Components/Adminto/form/TextareaFormGroup";
-import Number2Currency from "../Utils/Number2Currency";
+import Number2Currency, { CurrencySymbol } from "../Utils/Number2Currency";
 
 const deliverypricesRest = new DeliveryPricesRest();
 const deliverypricesTypeRest = new TypesDeliveryRest();
@@ -355,7 +355,7 @@ const DeliveryPricesType = ({ ubigeo = [] }) => {
                                             <span className="text-muted">
                                                 Express:{" "}
                                                 <span className="font-monospace text-reset">
-                                                    S/.{" "}
+                                                    {CurrencySymbol()}
                                                     {Number2Currency(
                                                         data.express_price
                                                     )}
@@ -368,7 +368,7 @@ const DeliveryPricesType = ({ ubigeo = [] }) => {
                                 container.html(
                                     renderToString(
                                         <span>
-                                            S/. {Number2Currency(data.price)}
+                                            {CurrencySymbol()}{Number2Currency(data.price)}
                                         </span>
                                     )
                                 );
@@ -376,7 +376,7 @@ const DeliveryPricesType = ({ ubigeo = [] }) => {
                                 container.html(
                                     renderToString(
                                         <span>
-                                            S/. {Number2Currency(data.agency_price)}
+                                            {CurrencySymbol()}{Number2Currency(data.agency_price)}
                                         </span>
                                     )
                                 );
